@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header id="menu"></header>
+    <a id="volver" class="btn btn-warning">Volver</a>
+    <table id="tabla">
+        <thead>
+            <tr>
+                <th>PERSONAJE</th>
+                <th>IMAGEN</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    
+</body>
+<script src="./js/jquery-3.6.1.min.js"></script>
+<script>
+    var url="https://apiseriespersonajes2023.azurewebsites.net/";
+    $(document).ready(function(){
+        $("#menu").load("Menu.html");
+        cargarPersonajes();
+    })
+
+    var parameters=new URLSearchParams(window.location.search);
+    var idSerie = parseInt(parameters.get("idSerie"));
+    
+    function cargarPersonajes(){
+        var request="/api/Series/PersonajesSerie/";
+        $.ajax({
+            "url":url+request+idSerie,
+            "method":"GET",
+            "dataType":"json",
+            success:function(data){
+                
+                $.each(data,function(index,personaje){
+                    
+                    var tr=$("<tr>");
+                    var tdPersonaje=$("<td>",{"text":personaje.nombre});
+                    var tdImagen=$("<td>");
+                    var aImagen=$("<img>",{"src":personaje.imagen});
+                    tdImagen.append(aImagen);
+                    tr.append(tdPersonaje,tdImagen);
+                    $("#tabla tbody").append(tr);
+                    $("#volver").attr("href","Serie.html?idSeries="+personaje.idSerie);
+                        
+                })
+                
+            }
+        })
+        
+    }
+</script>
+</html>

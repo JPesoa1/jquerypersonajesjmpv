@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header id="menu"></header>
+    <h1 style="color:blue">Nuevo personaje</h1>
+    <form onsubmit="insertarPersonaje();return false">
+        <label>Nombre:</label>
+        <input id="nombre" type="text"  required/><br/>
+
+        <label>Imagen:</label>
+        <input id="imagen" type="text"  required/>
+
+        <br/>
+        <label>Serie:</label>
+        <select id="select">
+           
+        </select>
+        <br/>
+        <button>Insertar personaje</button>
+    </form>
+</body>
+<script src="./js/jquery-3.6.1.min.js"></script>
+<script>
+    var url="https://apiseriespersonajes2023.azurewebsites.net";
+    $(document).ready(function(){
+        $("#menu").load("Menu.html");
+       cargarSelect();
+       
+    })
+
+    function insertarPersonaje(){
+        
+        var request="/api/Personajes";
+        var personaje={}
+        
+            var idSerie=parseInt($("#select").val());
+            personaje={
+                "nombre":$("#nombre").val(),
+                "imagen":$("#imagen").val(),
+                "idSerie":idSerie
+            }
+            
+        
+        console.log(idSerie);
+        
+        
+        const myJson = JSON.stringify(personaje);
+        $.ajax({
+            "url":url+request,
+            "method":"POST",
+            "data":myJson,
+            "contentType":"application/json",
+            success:function(){
+                console.log("Post Realizado");
+                
+            }
+        })
+    }
+
+    function cargarSelect(){
+        var request2="/api/Series"
+        $.ajax({
+            "url":url+request2,
+            "method":"GET",
+            "dataType":"json",
+            success:function(data){
+
+                $.each(data,function(index,serie){
+                    var option=$("<option>",{"text":serie.nombre,"value":serie.idSerie});
+                    $("#select").append(option);
+                });
+            }
+        })
+    }
+
+    
+   
+</script>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header id="menu"></header>
+    <img style="width: 300px;"  id="img"/>
+    <br/>
+    <h2 id="nombre"></h2>
+    <br/>
+    <a id="bt" class="btn btn-info">Personajes</a>
+</body>
+<script src="./js/jquery-3.6.1.min.js"></script>
+<script>
+    var url="https://apiseriespersonajes2023.azurewebsites.net/";
+    $(document).ready(function(){
+        $("#menu").load("Menu.html");
+        cargarSerie();
+    })
+
+    var parameters=new URLSearchParams(window.location.search);
+    var idSeries = parameters.get("idSeries")
+    function cargarSerie(){
+        var request="/api/Series/";
+
+        $.ajax({
+            "url":url+request+idSeries,
+            "method":"GET",
+            "dataType":"json",
+            success:function(data){
+                $("#img").attr("src",data.imagen);
+                $("#nombre").text(data.nombre)
+                $("#bt").attr("href","Personajes.html?idSerie="+data.idSerie);
+            }
+        })
+    }
+</script>
+</html>
